@@ -71,7 +71,7 @@ async function writeButton() {
   let text = document.querySelector('#text').value;
   log('Text: ' + text);
   try {
-    channel.writeValue(new TextEncoder("utf-8").encode(text));
+    await channel.writeValue(new TextEncoder("utf-8").encode(text));
   } catch(error) {
     log('Argh! ' + error);
   }
