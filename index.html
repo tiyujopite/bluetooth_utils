@@ -13,6 +13,7 @@
   <input type="text" id="characteristic">
   <br>
   <button onclick="connectButton()">Connect</button>
+  <button onclick="connectAntPrintTestButton()">Connect and print and disconnect</button>
   <br>
   <label for="text">text:</label>
   <textarea style="width: 100%" rows="20" id="text"></textarea>
@@ -59,12 +60,56 @@ async function connectButton() {
 
     log('Getting Characteristic...');
     channel = await service.getCharacteristic(characteristicUuid);
+    log(channel.properties);
     log('OK...');
 
   } catch(error) {
     log('Argh! ' + error);
   }
 }
+
+async function connectAntPrintTestButton() {
+  clearLog();
+  let serviceUuid = document.querySelector('#service').value;
+  log('serviceUuid: ' + serviceUuid);
+
+  let characteristicUuid = document.querySelector('#characteristic').value;
+  log('characteristicUuid: ' + characteristicUuid);
+
+  try {
+    log('Requesting any Bluetooth Device...');
+    device = await navigator.bluetooth.requestDevice({
+      acceptAllDevices: true,
+      optionalServices: [serviceUuid]
+    });
+
+    log('Connecting to GATT Server...');
+    const server = await device.gatt.connect();
+
+    log('Getting Service...');
+    const service = await server.getPrimaryService(serviceUuid);
+
+    log('Getting Characteristic...');
+    channel = await service.getCharacteristic(characteristicUuid);
+    log(channel.properties);
+    log('OK...');
+
+    var DATA = ''
+    + '\x1B' + '\x61' + '\x31'                                              // center align
+    + '\x1D' + '\x21' + '\x11' + 'Hello\nBluetooth!\n\n'                    // double font size
+    + '\x1D' + '\x21' + '\x00' + '... from your friends\nat https://qz.io'  // normal font size
+    + '\n\n\n\n\n\n\n';                                                     // feed paper
+    log('Writing test...')
+    let writeOutput = await channel.writeValueWithoutResponse(new TextEncoder("utf-8").encode(DATA));
+    log('OK...');
+    log(writeOutput);
+    device.gatt.disconnect();
+
+  } catch(error) {
+    log('Argh! ' + error);
+  }
+}
+
 
 async function writeButton() {
   if (!device || !channel) {
@@ -74,7 +119,7 @@ async function writeButton() {
   let text = document.querySelector('#text').value;
   log('Text: ' + text);
   try {
-    let writeOutput = await channel.writeValueWithResponse(new TextEncoder("utf-8").encode(text));
+    let writeOutput = await channel.writeValueWithoutResponse(new TextEncoder("utf-8").encode(text));
     log('OK...');
     log(writeOutput);
   } catch(error) {
@@ -94,7 +139,7 @@ async function writeTestButton() {
     + '\n\n\n\n\n\n\n';                                                     // feed paper
   log('Writing test...')
   try {
-    let writeOutput = await channel.writeValueWithResponse(new TextEncoder("utf-8").encode(DATA));
+    let writeOutput = await channel.writeValueWithoutResponse(new TextEncoder("utf-8").encode(DATA));
     log('OK...');
     log(writeOutput);
   } catch(error) {
