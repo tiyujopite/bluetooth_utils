@@ -92,7 +92,7 @@ async function writeTestButton() {
     + '\n\n\n\n\n\n\n';                                                     // feed paper
   log('Writing test...')
   try {
-    await channel.writeValue(new TextEncoder("utf-8").encode(data));
+    await channel.writeValue(new TextEncoder("utf-8").encode(DATA));
   } catch(error) {
     log('Argh! ' + error);
   }
