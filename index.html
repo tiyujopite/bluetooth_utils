@@ -19,6 +19,7 @@
   <label for="text">text:</label>
   <textarea style="width: 100%" rows="20" id="text"></textarea>
   <br>
+  <button onclick="writeButtonNOutf()">Write TEXT NO utf8</button>
   <button onclick="writeButton()">Write TEXT</button>
   <button onclick="writeButtonSinEncode()">Write TEXT sin encode</button>
   <button onclick="writeButtonBuffer()">Write TEXT buffer</button>
@@ -166,6 +167,22 @@ async function writeButton() {
   log('Text: ' + text);
   try {
     const value = new TextEncoder("utf-8").encode(text);
+    let writeOutput = await channel.writeValueWithoutResponse(value);
+    log('OK...');
+    log(writeOutput);
+  } catch(error) {
+    log('Argh! ' + error);
+  }
+}
+async function writeButtonNOutf() {
+  if (!device || !channel) {
+    log('Device or GATT Channel not connected');
+    return;
+  }
+  let text = document.querySelector('#text').value;
+  log('Text: ' + text);
+  try {
+    const value = new TextEncoder().encode(text);
     let writeOutput = await channel.writeValueWithoutResponse(value);
     log('OK...');
     log(writeOutput);
