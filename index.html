@@ -74,7 +74,7 @@ async function writeButton() {
   let text = document.querySelector('#text').value;
   log('Text: ' + text);
   try {
-    await channel.writeValue(new TextEncoder("utf-8").encode(text));
+    await channel.writeValueWithoutResponse(new TextEncoder("utf-8").encode(text));
   } catch(error) {
     log('Argh! ' + error);
   }
@@ -92,7 +92,7 @@ async function writeTestButton() {
     + '\n\n\n\n\n\n\n';                                                     // feed paper
   log('Writing test...')
   try {
-    await channel.writeValue(new TextEncoder("utf-8").encode(DATA));
+    await channel.writeValueWithoutResponse(new TextEncoder("utf-8").encode(DATA));
   } catch(error) {
     log('Argh! ' + error);
   }
