@@ -17,7 +17,8 @@
   <label for="text">text:</label>
   <textarea style="width: 100%" rows="20" id="text"></textarea>
   <br>
-  <button onclick="writeButton()">Write</button>
+  <button onclick="writeButton()">Write TEXT</button>
+  <button onclick="writeTestButton()">Write Test</button>
   <br>
   <textarea style="width: 100%" id="log" rows="20" readonly></textarea>
   <br>
@@ -58,6 +59,7 @@ async function connectButton() {
 
     log('Getting Characteristic...');
     channel = await service.getCharacteristic(characteristicUuid);
+    log('OK...');
 
   } catch(error) {
     log('Argh! ' + error);
@@ -73,6 +75,24 @@ async function writeButton() {
   log('Text: ' + text);
   try {
     await channel.writeValue(new TextEncoder("utf-8").encode(text));
+  } catch(error) {
+    log('Argh! ' + error);
+  }
+}
+
+async function writeTestButton() {
+  if (!device || !channel) {
+    log('Device or GATT Channel not connected');
+    return;
+  }
+  var DATA = ''
+    + '\x1B' + '\x61' + '\x31'                                              // center align
+    + '\x1D' + '\x21' + '\x11' + 'Hello\nBluetooth!\n\n'                    // double font size
+    + '\x1D' + '\x21' + '\x00' + '... from your friends\nat https://qz.io'  // normal font size
+    + '\n\n\n\n\n\n\n';                                                     // feed paper
+  log('Writing test...')
+  try {
+    await channel.writeValue(new TextEncoder("utf-8").encode(data));
   } catch(error) {
     log('Argh! ' + error);
   }
