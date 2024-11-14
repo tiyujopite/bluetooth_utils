@@ -46,7 +46,7 @@ async function connectButton() {
     log('Requesting any Bluetooth Device...');
     device = await navigator.bluetooth.requestDevice({
       acceptAllDevices: true,
-      // optionalServices: [serviceUuid]
+      optionalServices: [serviceUuid]
     });
 
     log('Connecting to GATT Server...');
