@@ -179,12 +179,15 @@ async function connectAndPrintAUTOTEXT() {
     for (const service of services) {
       log('> Service: ' + service.uuid);
       const characteristics = await service.getCharacteristics();
-      characteristics.forEach(characteristic => {
+      characteristics.forEach(async function(characteristic) {
         if (characteristic.properties.writeWithoutResponse) {
           log('>> Characteristic: ' + characteristic.uuid);
           log('>> WRITING: (WRITE WITHOUT RESPONSE)');
-          let text = document.querySelector('#text').value;                                            // feed paper
-          log(characteristic.writeValueWithoutResponse(new TextEncoder("utf-8").encode(text)));
+          let text = document.querySelector('#text').value;
+          log('Text: ' + text);
+          let res = await characteristic.writeValueWithoutResponse(new TextEncoder("utf-8").encode(text));
+          log(res);
+          log();
           }
         log('')
       });
