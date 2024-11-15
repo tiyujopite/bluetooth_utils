@@ -274,10 +274,10 @@ async function connectAndPrintAUTOonlyONETEXT() {
         log('No writeWithoutResponse characteristic found');
       }
     }
-    log('Disconnecting from Bluetooth Device...');
-    setTimeout(() => {
-      localdevice.gatt.disconnect();
-    }, 2000);
+    // log('Disconnecting from Bluetooth Device...');
+    // setTimeout(() => {
+    //   localdevice.gatt.disconnect();
+    // }, 2000);
   } catch(error) {
     log('Argh! ' + error);
   }
