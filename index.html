@@ -14,6 +14,7 @@
   <br>
   <button onclick="connectAndPrintAUTOTEXT()">connectAndPrintAUTOTEXT</button>
   <button onclick="connectAndPrintAUTO()">connectAndPrintAUTO</button>
+  <button onclick="connectAndPrintAUTOonlyONE()">connectAndPrintAUTOonlyONE</button>
   <button onclick="connectButtonShowServices()">Connect Show Services</button>
   <button onclick="connectServiceAndCharacteristic()">Connect Service and Characteristic</button>
   <button onclick="connectButton()">Connect</button>
@@ -160,6 +161,44 @@ async function connectAndPrintAUTO() {
     log('Argh! ' + error);
   }
 }
+
+async function connectAndPrintAUTOonlyONE() {
+  clearLog();
+  try {
+    log('Requesting any Bluetooth Device...');
+    let localdevice = await navigator.bluetooth.requestDevice({
+      acceptAllDevices: true,
+      // optionalServices: optionalServices
+    });
+    log('Connecting to GATT Server...');
+    let localserver = await localdevice.gatt.connect();
+
+    log('Getting Services...');
+    const services = await localserver.getPrimaryServices();
+
+    log('Getting Characteristics...');
+    for (const service of services) {
+      log('> Service: ' + service.uuid);
+      const characteristics = await service.getCharacteristics();
+      let filtered = characteristics.filter(characteristic => characteristic.properties.writeWithoutResponse);
+      if (filtered) {
+        characteristic = filtered[0];
+        log('>> Characteristic: ' + characteristic.uuid);
+        log('>> WRITING: (WRITE WITHOUT RESPONSE)');
+        var DATA = ''
+          + '\x1B' + '\x61' + '\x31'                                              // center align
+          + '\x1D' + '\x21' + '\x11' + 'Hello\nBluetooth!\n\n'                    // double font size
+          + '\x1D' + '\x21' + '\x00' + '... from your friends\nat https://qz.io'  // normal font size
+          + '\n\n\n\n\n\n\n';                                                     // feed paper
+          await characteristic.writeValueWithoutResponse(new TextEncoder("utf-8").encode(DATA));
+          return;
+      }
+    }
+  } catch(error) {
+    log('Argh! ' + error);
+  }
+}
+
 
 async function connectAndPrintAUTOTEXT() {
   clearLog();
