@@ -12,6 +12,8 @@
   <label for="characteristic">Characteristic:</label>
   <input type="text" id="characteristic">
   <br>
+  <button onclick="connectButtonShowServices()">Connect Show Services</button>
+  <button onclick="connectServiceAndCharacteristic()">Connect Service and Characteristic</button>
   <button onclick="connectButton()">Connect</button>
   <button onclick="connectAntPrintTestButton()">Connect and print and disconnect</button>
   <button onclick="connectAntPrintTestButtonDeprecated()">Connect and print and disconnect deprecated</button>
@@ -65,6 +67,66 @@ async function connectButton() {
     log('Getting Characteristic...');
     channel = await service.getCharacteristic(characteristicUuid);
     log(channel.properties);
+    log('OK...');
+
+  } catch(error) {
+    log('Argh! ' + error);
+  }
+}
+
+async function connectButtonShowServices() {
+  clearLog();
+  // let serviceUuid = document.querySelector('#service').value;
+  // log('serviceUuid: ' + serviceUuid);
+
+  // let characteristicUuid = document.querySelector('#characteristic').value;
+  // log('characteristicUuid: ' + characteristicUuid);
+
+  try {
+    log('Requesting any Bluetooth Device...');
+    device = await navigator.bluetooth.requestDevice({
+      acceptAllDevices: true,
+      // optionalServices: optionalServices
+    });
+    log('Connecting to GATT Server...');
+    const server = await device.gatt.connect();
+
+    log('Getting Services...');
+    const services = await server.getPrimaryServices();
+
+    log('Getting Characteristics...');
+    for (const service of services) {
+      log('> Service: ' + service.uuid);
+      const characteristics = await service.getCharacteristics();
+      characteristics.forEach(characteristic => {
+        log('>> Characteristic: ' + characteristic.uuid);
+        if (characteristic.properties.write) {
+          log('>> Characteristic: ' + characteristic.uuid + ' (WRITE)');
+        }
+        if (characteristic.properties.writeWithoutResponse) {
+          log('>> Characteristic: ' + characteristic.uuid + ' (WRITE WITHOUT RESPONSE)');
+        }
+        log('')
+      });
+    }
+  } catch(error) {
+    log('Argh! ' + error);
+  }
+}
+
+async function connectServiceAndCharacteristic() {
+  let serviceUuid = document.querySelector('#service').value;
+  log('serviceUuid: ' + serviceUuid);
+
+  let characteristicUuid = document.querySelector('#characteristic').value;
+  log('characteristicUuid: ' + characteristicUuid);
+
+  try {
+    log('Getting Service...');
+    const service = await server.getPrimaryService(serviceUuid);
+
+    log('Getting Characteristic...');
+    channel = await service.getCharacteristic(characteristicUuid);
     log('OK...');
 
   } catch(error) {
@@ -174,6 +236,7 @@ async function writeButton() {
     log('Argh! ' + error);
   }
 }
+
 async function writeButtonNOutf() {
   if (!device || !channel) {
     log('Device or GATT Channel not connected');
