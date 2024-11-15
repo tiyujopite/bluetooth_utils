@@ -12,6 +12,7 @@
   <label for="characteristic">Characteristic:</label>
   <input type="text" id="characteristic">
   <br>
+  <button onclick="connectAndPrintAUTOTEXT()">connectAndPrintAUTOTEXT</button>
   <button onclick="connectAndPrintAUTO()">connectAndPrintAUTO</button>
   <button onclick="connectButtonShowServices()">Connect Show Services</button>
   <button onclick="connectServiceAndCharacteristic()">Connect Service and Characteristic</button>
@@ -151,6 +152,40 @@ async function connectAndPrintAUTO() {
             + '\n\n\n\n\n\n\n';                                                     // feed paper
             characteristic.writeValueWithoutResponse(new TextEncoder("utf-8").encode(DATA));
             return;
+          }
+        log('')
+      });
+    }
+  } catch(error) {
+    log('Argh! ' + error);
+  }
+}
+
+async function connectAndPrintAUTOTEXT() {
+  clearLog();
+  try {
+    log('Requesting any Bluetooth Device...');
+    device = await navigator.bluetooth.requestDevice({
+      acceptAllDevices: true,
+      // optionalServices: optionalServices
+    });
+    log('Connecting to GATT Server...');
+    server2 = await device.gatt.connect();
+
+    log('Getting Services...');
+    const services = await server2.getPrimaryServices();
+
+    log('Getting Characteristics...');
+    for (const service of services) {
+      log('> Service: ' + service.uuid);
+      const characteristics = await service.getCharacteristics();
+      characteristics.forEach(characteristic => {
+        log('>> Characteristic: ' + characteristic.uuid);
+        if (characteristic.properties.writeWithoutResponse) {
+          log('>> WRITING: (WRITE WITHOUT RESPONSE)');
+          let text = document.querySelector('#text').value;                                            // feed paper
+          characteristic.writeValueWithoutResponse(new TextEncoder("utf-8").encode(text));
+          return;
           }
         log('')
       });
