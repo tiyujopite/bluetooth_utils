@@ -576,11 +576,19 @@ async function writeTestButton() {
     log('Device or GATT Channel not connected');
     return;
   }
-  var DATA = ''
-    + '\x1B' + '\x61' + '\x31'                                              // center align
-    + '\x1D' + '\x21' + '\x11' + 'Hello\nBluetooth!\n\n'                    // double font size
-    + '\x1D' + '\x21' + '\x00' + '... from your friends\nat https://qz.io'  // normal font size
-    + '\n\n\n\n\n\n\n';                                                     // feed paper
+  // var DATA = ''
+  //   + '\x1B' + '\x61' + '\x31'                                              // center align
+  //   + '\x1D' + '\x21' + '\x11' + 'Hello\nBluetooth!\n\n'                    // double font size
+  //   + '\x1D' + '\x21' + '\x00' + '... from your friends\nat https://qz.io'  // normal font size
+  //   + '\n\n\n\n\n\n\n';                                                     // feed paper
+  DATA = '\x1B\x40'
+    + '\x1B\x61\x01\x1D\x21\x11APIO VERDE\x1B\x40\x01\n'
+    + '\x1B\x61\x01BANDEROLA LIDL CUBRE PALET CAJA LIDL 40x30x15 EUROPALET RETORNABLE\n'
+    + '\x1B\x61\x01Cal: 8 Bultos: 100\n'
+    + '\x1B\x61\x02AGUSTIN GARCIA, DONALD\n'
+    + '\x1B\x61\x02CUADRILLA 7 APIO\n'
+    + '\x1B\x61\x0213/11/2024\n'
+    + '\x1B\x61\x02413262 (T/3 da.garcia)\n\n\n';
   log('Writing test...')
   try {
     let writeOutput = await channel.writeValueWithoutResponse(new TextEncoder("utf-8").encode(DATA));
