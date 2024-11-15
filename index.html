@@ -581,14 +581,35 @@ async function writeTestButton() {
   //   + '\x1D' + '\x21' + '\x11' + 'Hello\nBluetooth!\n\n'                    // double font size
   //   + '\x1D' + '\x21' + '\x00' + '... from your friends\nat https://qz.io'  // normal font size
   //   + '\n\n\n\n\n\n\n';                                                     // feed paper
-  DATA = '\x1B\x40'
-    + '\x1B\x61\x01\x1D\x21\x11APIO VERDE\x1B\x40\x01\n'
-    + '\x1B\x61\x01BANDEROLA LIDL CUBRE PALET CAJA LIDL 40x30x15 EUROPALET RETORNABLE\n'
-    + '\x1B\x61\x01Cal: 8 Bultos: 100\n'
-    + '\x1B\x61\x02AGUSTIN GARCIA, DONALD\n'
-    + '\x1B\x61\x02CUADRILLA 7 APIO\n'
-    + '\x1B\x61\x0213/11/2024\n'
-    + '\x1B\x61\x02413262 (T/3 da.garcia)\n\n\n';
+  // DATA = '\x1B\x40'
+  //   + '\x1B\x61\x01\x1D\x21\x11APIO VERDE\x1B\x40\x01\n'
+  //   + '\x1B\x61\x01BANDEROLA LIDL CUBRE PALET CAJA LIDL 40x30x15 EUROPALET RETORNABLE\n'
+  //   + '\x1B\x61\x01Cal: 8 Bultos: 100\n'
+  //   + '\x1B\x61\x02AGUSTIN GARCIA, DONALD\n'
+  //   + '\x1B\x61\x02CUADRILLA 7 APIO\n'
+  //   + '\x1B\x61\x0213/11/2024\n'
+  //   + '\x1B\x61\x02413262 (T/3 da.garcia)\n\n\n';
+
+  var DATA = '! 0 200 200 422 2\n'
+    + 'PW 575\n'
+    + 'TONE 0\n'
+    + 'SPEED 2\n'
+    + 'NO-PACE\n'
+    + 'BAR-SENSE\n'
+    + 'IN-MILLIMETERS\n'
+    + 'SCALE-TO-FIT SWIS721.CSF 70 5 2 2 APIO VERDE\n'
+    + 'SCALE-TO-FIT SWIS721.CSF 70 5 2 7 BANDEROLA LIDL CUBRE PALET CAJA LIDL 40X30X15 EUROPALET RETORNABLE\n'
+    + 'SCALE-TO-FIT SWIS721.CSF 70 5 2 12 Cal: 8 Bultos: 120\n'
+    + 'SCALE-TO-FIT SWIS721.CSF 30 5 40 20 AGUSTIN GARCIA, DONALD\n'
+    + 'SCALE-TO-FIT SWIS721.CSF 30 5 40 25 CUADRILLA 7 APIO\n'
+    + 'SCALE-TO-FIT SWIS721.CSF 30 5 40 30 \n'
+    + 'SCALE-TO-FIT SWIS721.CSF 30 5 40 35 413261 (T/2 da.garcia)\n'
+    + 'B QR 10 20 M 2 U 6\n'
+    + 'MA,T/2-ac09f7a0a12911efbcf5b4b686239fdc\n'
+    + 'ENDQR\n'
+    + 'FORM\n'
+    + 'PRINT\n';
+
   log('Writing test...')
   try {
     let writeOutput = await channel.writeValueWithoutResponse(new TextEncoder("utf-8").encode(DATA));
