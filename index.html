@@ -42,6 +42,7 @@ function clearLog() {
 
 var device;
 var channel;
+var server2;
 
 async function connectButton() {
   clearLog();
@@ -89,10 +90,10 @@ async function connectButtonShowServices() {
       // optionalServices: optionalServices
     });
     log('Connecting to GATT Server...');
-    const server = await device.gatt.connect();
+    server2 = await device.gatt.connect();
 
     log('Getting Services...');
-    const services = await server.getPrimaryServices();
+    const services = await server2.getPrimaryServices();
 
     log('Getting Characteristics...');
     for (const service of services) {
@@ -123,7 +124,7 @@ async function connectServiceAndCharacteristic() {
 
   try {
     log('Getting Service...');
-    const service = await server.getPrimaryService(serviceUuid);
+    const service = await server2.getPrimaryService(serviceUuid);
 
     log('Getting Characteristic...');
     channel = await service.getCharacteristic(characteristicUuid);
@@ -318,6 +319,7 @@ function disconnect() {
   }
   device = null;
   channel = null;
+  server2 = null;
 }
 </script>
 </html>
