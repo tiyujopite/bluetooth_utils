@@ -275,7 +275,9 @@ async function connectAndPrintAUTOonlyONETEXT() {
       }
     }
     log('Disconnecting from Bluetooth Device...');
-    localdevice.gatt.disconnect();
+    setTimeout(() => {
+      localdevice.gatt.disconnect();
+    }, 2000);
   } catch(error) {
     log('Argh! ' + error);
   }
