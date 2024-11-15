@@ -17,6 +17,8 @@
   <button onclick="connectAndPrintAUTOonlyONE()">connectAndPrintAUTOonlyONE</button>
   <button onclick="connectAndPrintAUTOonlyONETEXT()">connectAndPrintAUTOonlyONETEXT</button>
   <button onclick="connectAndPrintAUTOonlyONETEXTsecure()">connectAndPrintAUTOonlyONETEXTsecure</button>
+  <button onclick="connectAndPrintAUTOonlyONETEXTsecureRESPONSE()">connectAndPrintAUTOonlyONETEXTsecureRESPONSE</button>
+  <button onclick="connectAndPrintAUTOonlyONETEXTRESPONSE()">connectAndPrintAUTOonlyONETEXTRESPONSE</button>
   <button onclick="connectButtonShowServices()">Connect Show Services</button>
   <button onclick="connectServiceAndCharacteristic()">Connect Service and Characteristic</button>
   <button onclick="connectButton()">Connect</button>
@@ -267,6 +269,85 @@ async function connectAndPrintAUTOonlyONETEXT() {
         log('>> Characteristic: ' + characteristic.uuid);
         log('>> WRITING: (WRITE WITHOUT RESPONSE)');
         await characteristic.writeValueWithoutResponse(new TextEncoder("utf-8").encode(text));
+        break;
+      } else {
+        log('No writeWithoutResponse characteristic found');
+      }
+    }
+    log('Disconnecting from Bluetooth Device...');
+    localdevice.gatt.disconnect();
+  } catch(error) {
+    log('Argh! ' + error);
+  }
+}
+
+
+async function connectAndPrintAUTOonlyONETEXTsecureRESPONSE() {
+  clearLog();
+  try {
+    log('Requesting any Bluetooth Device...');
+    let localdevice = await navigator.bluetooth.requestDevice({
+      acceptAllDevices: true,
+      // optionalServices: optionalServices
+    });
+    log('Connecting to GATT Server...');
+    let localserver = await localdevice.gatt.connect();
+
+    log('Getting Services...');
+    const services = await localserver.getPrimaryServices();
+    let text = document.querySelector('#text').value;
+
+    log('Getting Characteristics...');
+    for (const service of services) {
+      log('> Service: ' + service.uuid);
+      const characteristics = await service.getCharacteristics();
+      let filtered = characteristics.filter(characteristic => (characteristic.properties.writeWithResponse && characteristic.properties.reliableWrite));
+      log('filtered');
+      log(filtered);
+      if (filtered && filtered.length > 0) {
+        characteristic = filtered[0];
+        log('>> Characteristic: ' + characteristic.uuid);
+        log('>> WRITING: (WRITE WITH RESPONSE)');
+        await characteristic.writeValueWithResponse(new TextEncoder("utf-8").encode(text));
+        break;
+      } else {
+        log('No writeWithoutResponse characteristic found');
+      }
+    }
+    log('Disconnecting from Bluetooth Device...');
+    localdevice.gatt.disconnect();
+  } catch(error) {
+    log('Argh! ' + error);
+  }
+}
+
+async function connectAndPrintAUTOonlyONETEXTRESPONSE() {
+  clearLog();
+  try {
+    log('Requesting any Bluetooth Device...');
+    let localdevice = await navigator.bluetooth.requestDevice({
+      acceptAllDevices: true,
+      // optionalServices: optionalServices
+    });
+    log('Connecting to GATT Server...');
+    let localserver = await localdevice.gatt.connect();
+
+    log('Getting Services...');
+    const services = await localserver.getPrimaryServices();
+    let text = document.querySelector('#text').value;
+
+    log('Getting Characteristics...');
+    for (const service of services) {
+      log('> Service: ' + service.uuid);
+      const characteristics = await service.getCharacteristics();
+      let filtered = characteristics.filter(characteristic => characteristic.properties.writeWithResponse);
+      log('filtered');
+      log(filtered);
+      if (filtered && filtered.length > 0) {
+        characteristic = filtered[0];
+        log('>> Characteristic: ' + characteristic.uuid);
+        log('>> WRITING: (WRITE WITH RESPONSE)');
+        await characteristic.writeValueWithResponse(new TextEncoder("utf-8").encode(text));
         break;
       } else {
         log('No writeWithoutResponse characteristic found');
