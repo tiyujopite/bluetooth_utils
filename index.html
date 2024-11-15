@@ -16,6 +16,7 @@
   <button onclick="connectAndPrintAUTO()">connectAndPrintAUTO</button>
   <button onclick="connectAndPrintAUTOonlyONE()">connectAndPrintAUTOonlyONE</button>
   <button onclick="connectAndPrintAUTOonlyONETEXT()">connectAndPrintAUTOonlyONETEXT</button>
+  <button onclick="connectAndPrintAUTOonlyONETEXTsecure()">connectAndPrintAUTOonlyONETEXTsecure</button>
   <button onclick="connectButtonShowServices()">Connect Show Services</button>
   <button onclick="connectServiceAndCharacteristic()">Connect Service and Characteristic</button>
   <button onclick="connectButton()">Connect</button>
@@ -200,7 +201,7 @@ async function connectAndPrintAUTOonlyONE() {
   }
 }
 
-async function connectAndPrintAUTOonlyONETEXT() {
+async function connectAndPrintAUTOonlyONETEXTsecure() {
   clearLog();
   try {
     log('Requesting any Bluetooth Device...');
@@ -220,6 +221,45 @@ async function connectAndPrintAUTOonlyONETEXT() {
       log('> Service: ' + service.uuid);
       const characteristics = await service.getCharacteristics();
       let filtered = characteristics.filter(characteristic => (characteristic.properties.writeWithoutResponse && characteristic.properties.reliableWrite));
+      log('filtered');
+      log(filtered);
+      if (filtered && filtered.length > 0) {
+        characteristic = filtered[0];
+        log('>> Characteristic: ' + characteristic.uuid);
+        log('>> WRITING: (WRITE WITHOUT RESPONSE)');
+        await characteristic.writeValueWithoutResponse(new TextEncoder("utf-8").encode(text));
+        break;
+      } else {
+        log('No writeWithoutResponse characteristic found');
+      }
+    }
+    log('Disconnecting from Bluetooth Device...');
+    localdevice.gatt.disconnect();
+  } catch(error) {
+    log('Argh! ' + error);
+  }
+}
+
+async function connectAndPrintAUTOonlyONETEXT() {
+  clearLog();
+  try {
+    log('Requesting any Bluetooth Device...');
+    let localdevice = await navigator.bluetooth.requestDevice({
+      acceptAllDevices: true,
+      // optionalServices: optionalServices
+    });
+    log('Connecting to GATT Server...');
+    let localserver = await localdevice.gatt.connect();
+
+    log('Getting Services...');
+    const services = await localserver.getPrimaryServices();
+    let text = document.querySelector('#text').value;
+
+    log('Getting Characteristics...');
+    for (const service of services) {
+      log('> Service: ' + service.uuid);
+      const characteristics = await service.getCharacteristics();
+      let filtered = characteristics.filter(characteristic => characteristic.properties.writeWithoutResponse);
       log('filtered');
       log(filtered);
       if (filtered && filtered.length > 0) {
