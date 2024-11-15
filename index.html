@@ -12,6 +12,7 @@
   <label for="characteristic">Characteristic:</label>
   <input type="text" id="characteristic">
   <br>
+  <button onclick="connectAndPrintAUTO()">connectAndPrintAUTO</button>
   <button onclick="connectButtonShowServices()">Connect Show Services</button>
   <button onclick="connectServiceAndCharacteristic()">Connect Service and Characteristic</button>
   <button onclick="connectButton()">Connect</button>
@@ -107,6 +108,50 @@ async function connectButtonShowServices() {
         if (characteristic.properties.writeWithoutResponse) {
           log('>> Characteristic: ' + characteristic.uuid + ' (WRITE WITHOUT RESPONSE)');
         }
+        log('')
+      });
+    }
+  } catch(error) {
+    log('Argh! ' + error);
+  }
+}
+
+async function connectAndPrintAUTO() {
+  clearLog();
+  // let serviceUuid = document.querySelector('#service').value;
+  // log('serviceUuid: ' + serviceUuid);
+
+  // let characteristicUuid = document.querySelector('#characteristic').value;
+  // log('characteristicUuid: ' + characteristicUuid);
+
+  try {
+    log('Requesting any Bluetooth Device...');
+    device = await navigator.bluetooth.requestDevice({
+      acceptAllDevices: true,
+      // optionalServices: optionalServices
+    });
+    log('Connecting to GATT Server...');
+    server2 = await device.gatt.connect();
+
+    log('Getting Services...');
+    const services = await server2.getPrimaryServices();
+
+    log('Getting Characteristics...');
+    for (const service of services) {
+      log('> Service: ' + service.uuid);
+      const characteristics = await service.getCharacteristics();
+      characteristics.forEach(characteristic => {
+        log('>> Characteristic: ' + characteristic.uuid);
+        if (characteristic.properties.writeWithoutResponse) {
+          log('>> WRITING: (WRITE WITHOUT RESPONSE)');
+          var DATA = ''
+            + '\x1B' + '\x61' + '\x31'                                              // center align
+            + '\x1D' + '\x21' + '\x11' + 'Hello\nBluetooth!\n\n'                    // double font size
+            + '\x1D' + '\x21' + '\x00' + '... from your friends\nat https://qz.io'  // normal font size
+            + '\n\n\n\n\n\n\n';                                                     // feed paper
+            characteristic.writeValueWithoutResponse(new TextEncoder("utf-8").encode(DATA));
+            return;
+          }
         log('')
       });
     }
