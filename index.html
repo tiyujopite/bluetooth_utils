@@ -225,7 +225,6 @@ async function connectAndPrintAUTOonlyONETEXT() {
         log('>> Characteristic: ' + characteristic.uuid);
         log('>> WRITING: (WRITE WITHOUT RESPONSE)');
         await characteristic.writeValueWithoutResponse(new TextEncoder("utf-8").encode(text));
-        return;
       }
     }
     log('Disconnecting from Bluetooth Device...');
