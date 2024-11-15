@@ -222,7 +222,7 @@ async function connectAndPrintAUTOonlyONETEXT() {
       let filtered = characteristics.filter(characteristic => (characteristic.properties.writeWithoutResponse && characteristic.properties.reliableWrite));
       log('filtered');
       log(filtered);
-      if (filtered) {
+      if (filtered && filtered.length > 0) {
         characteristic = filtered[0];
         log('>> Characteristic: ' + characteristic.uuid);
         log('>> WRITING: (WRITE WITHOUT RESPONSE)');
