@@ -219,13 +219,15 @@ async function connectAndPrintAUTOonlyONETEXT() {
     for (const service of services) {
       log('> Service: ' + service.uuid);
       const characteristics = await service.getCharacteristics();
-      let filtered = characteristics.filter(characteristic => characteristic.properties.writeWithoutResponse);
+      let filtered = characteristics.filter(characteristic => (characteristic.properties.writeWithoutResponse && characteristic.properties.reliableWrite));
       if (filtered) {
         characteristic = filtered[0];
         log('>> Characteristic: ' + characteristic.uuid);
         log('>> WRITING: (WRITE WITHOUT RESPONSE)');
         await characteristic.writeValueWithoutResponse(new TextEncoder("utf-8").encode(text));
         break;
+      } else {
+        log('No writeWithoutResponse characteristic found');
       }
     }
     log('Disconnecting from Bluetooth Device...');
