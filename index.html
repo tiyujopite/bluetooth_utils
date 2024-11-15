@@ -219,7 +219,7 @@ async function connectAndPrintAUTOonlyONETEXT() {
     for (const service of services) {
       log('> Service: ' + service.uuid);
       const characteristics = await service.getCharacteristics();
-      let filtered = characteristics.filter(characteristic => characteristic.properties.writeWithoutResponse && characteristic.properties.reliableWrite);
+      let filtered = characteristics.filter(characteristic => characteristic.properties.writeWithoutResponse);
       if (filtered) {
         characteristic = filtered[0];
         log('>> Characteristic: ' + characteristic.uuid);
