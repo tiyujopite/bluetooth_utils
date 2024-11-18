@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Title</title>
+    <title>Title2</title>
 </head>
 <body>
   <label for="service">Service:</label>
@@ -22,6 +22,7 @@
   <button onclick="connectButtonShowServices()">Connect Show Services</button>
   <button onclick="connectServiceAndCharacteristic()">Connect Service and Characteristic</button>
   <button onclick="connectButton()">Connect</button>
+  <button onclick="connectButtonAUTO()">Connect AUTO sin preguntar test</button>
   <button onclick="connectAntPrintTestButton()">Connect and print and disconnect</button>
   <button onclick="connectAntPrintTestButtonDeprecated()">Connect and print and disconnect deprecated</button>
   <br>
@@ -77,6 +78,39 @@ async function connectButton() {
     channel = await service.getCharacteristic(characteristicUuid);
     log(channel.properties);
     log('OK...');
+
+  } catch(error) {
+    log('Argh! ' + error);
+  }
+}
+
+async function connectButtonAUTO() {
+  clearLog();
+  let serviceUuid = document.querySelector('#service').value;
+
+  let characteristicUuid = document.querySelector('#characteristic').value;
+
+  try {
+    log('Requesting any Bluetooth Device...');
+    devices = await navigator.bluetooth.getDevices();
+
+    log(devices);
+    for (const device of devices) {
+      log(device);
+      log(device.name);
+      log(device.id);
+    }
+
+    // log('Connecting to GATT Server...');
+    // const server = await device.gatt.connect();
+
+    // log('Getting Service...');
+    // const service = await server.getPrimaryService(serviceUuid);
+
+    // log('Getting Characteristic...');
+    // channel = await service.getCharacteristic(characteristicUuid);
+    // log(channel.properties);
+    // log('OK...');
 
   } catch(error) {
     log('Argh! ' + error);
