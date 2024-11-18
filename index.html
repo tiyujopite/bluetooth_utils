@@ -681,7 +681,9 @@ async function writeTestButtonZPL() {
   //   '^XZ';
 
   var DATA = '^XA\n' +
-    '\n' +
+    '^PW600\n' +
+    '^LL380\n' +
+    '^MMT\n' +
     '^FX - Header\n' +
     '^CF0,40\n' +
     '^FO50,40^FDAPIO VERDE^FS\n' +
