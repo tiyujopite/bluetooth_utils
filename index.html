@@ -33,6 +33,7 @@
   <button onclick="writeButtonSinEncode()">Write TEXT sin encode</button>
   <button onclick="writeButtonBuffer()">Write TEXT buffer</button>
   <button onclick="writeTestButton()">Write Test</button>
+  <button onclick="writeTestButtonZPL()">writeTestButtonZPL</button>
   <br>
   <textarea style="width: 100%" id="log" rows="20" readonly></textarea>
   <br>
@@ -607,6 +608,43 @@ async function writeTestButton() {
   //   + 'ENDQR\n'
   //   + 'FORM\n'
   //   + 'PRINT\n';
+
+  log('Writing test...')
+  try {
+    let writeOutput = await channel.writeValueWithoutResponse(new TextEncoder("utf-8").encode(DATA));
+    log('OK...');
+    log(writeOutput);
+  } catch(error) {
+    log('Argh! ' + error);
+  }
+}
+
+async function writeTestButtonZPL() {
+  if (!device || !channel) {
+    log('Device or GATT Channel not connected');
+    return;
+  }
+  var DATA = '^XA\n' +
+    '\n' +
+    '^FX - Header\n' +
+    '^CF0,60\n' +
+    '^FO50,50^FDAPIO VERDE^FS\n' +
+    '^CF0,30\n' +
+    '^FO50,115^FDBOLSA NEUTRA CAJA FORTINI 60X40X15 CHEP^FS\n' +
+    '^CF0,60\n' +
+    '^FO50,155^FDCal: 10 Bultos: 75^FS\n' +
+    '\n' +
+    '^FX - QR code\n' +
+    '^FO100,250^BQN,2,10^FDQA,12345678^FS\n' +
+    '\n' +
+    '^FX - Right data\n' +
+    '^CF0,20\n' +
+    '^FO400,275^FDAUCACAMA TIPAN, NICOLAS RODRIGO^FS\n' +
+    '^FO400,325^FDCUADRILLA ICEBERG 1^FS\n' +
+    '^FO400,375^FD11/11/2024^FS\n' +
+    '^FO400,425^FD12345678^FS\n' +
+    '\n' +
+    '^XZ';
 
   log('Writing test...')
   try {
