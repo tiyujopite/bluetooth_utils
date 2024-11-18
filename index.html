@@ -36,7 +36,7 @@
   <button onclick="writeButtonSinEncode()">Write TEXT sin encode</button>
   <button onclick="writeButtonBuffer()">Write TEXT buffer</button>
   <button onclick="writeTestButton()">Write Test</button>
-  <button onclick="writeTestButtonZPL()">writeTestButtonZPL2</button>
+  <button onclick="writeTestButtonZPL()">writeTestButtonZPL3</button>
   <br>
   <textarea style="width: 100%" id="log" rows="20" readonly></textarea>
   <br>
@@ -112,7 +112,7 @@ async function connectButtonAUTOZebra() {
   clearLog();
   let serviceUuid = '38eb4a80-c570-11e3-9507-0002a5d5c51b';
   let characteristicUuid = '38eb4a82-c570-11e3-9507-0002a5d5c51b';
-  let name = 'XXZHN243203260'
+  let name = 'XXZHN243203260';
 
   try {
     devices = await navigator.bluetooth.getDevices();
@@ -738,7 +738,7 @@ async function writeTestButtonZPL() {
     '^PW600\n' +
     '^LL380\n' +
     '^MMT\n' +
-    '^PON\n' +
+    '^POI\n' +
     '^PMN\n' +
     '^FX - Header\n' +
     '^CF0,40\n' +
