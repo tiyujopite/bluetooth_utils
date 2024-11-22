@@ -789,6 +789,15 @@ async function writeTestButtonZPL2() {
     '^FDFD command that IS\n' +
     'preceded by an FB command.^FS\n' +
     '^XZ';
+
+  log('Writing test...')
+  try {
+    let writeOutput = await channel.writeValueWithoutResponse(new TextEncoder("utf-8").encode(DATA));
+    log('OK...');
+    log(writeOutput);
+  } catch(error) {
+    log('Argh! ' + error);
+  }
 }
 
 async function writeTestButtonZPL3() {
