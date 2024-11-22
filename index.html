@@ -38,6 +38,7 @@
   <button onclick="writeTestButton()">Write Test</button>
   <button onclick="writeTestButtonZPL()">writeTestButtonZPL</button>
   <button onclick="writeTestButtonZPL2()">writeTestButtonZPL2</button>
+  <button onclick="writeTestButtonZPL3()">writeTestButtonZPL3</button>
   <br>
   <textarea style="width: 100%" id="log" rows="20" readonly></textarea>
   <br>
@@ -787,6 +788,22 @@ async function writeTestButtonZPL2() {
     '^FB250,4,,\n' +
     '^FDFD command that IS\n' +
     'preceded by an FB command.^FS\n' +
+    '^XZ';
+}
+
+async function writeTestButtonZPL3() {
+  if (!device || !channel) {
+    log('Device or GATT Channel not connected');
+    return;
+  }
+  var DATA = '^XA,' +
+    '^MNA,' +
+    '^PW575,' +
+    '^LL400,' +
+    '^CF0,30,30^FO25, 50,' +
+    '^FB250,4,,,' +
+    '^FDFD command that IS,' +
+    'preceded by an FB command.^FS,' +
     '^XZ';
 
   log('Writing test...')
