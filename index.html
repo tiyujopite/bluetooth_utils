@@ -36,7 +36,8 @@
   <button onclick="writeButtonSinEncode()">Write TEXT sin encode</button>
   <button onclick="writeButtonBuffer()">Write TEXT buffer</button>
   <button onclick="writeTestButton()">Write Test</button>
-  <button onclick="writeTestButtonZPL()">writeTestButtonZPL4</button>
+  <button onclick="writeTestButtonZPL()">writeTestButtonZPL</button>
+  <button onclick="writeTestButtonZPL2()">writeTestButtonZPL2</button>
   <br>
   <textarea style="width: 100%" id="log" rows="20" readonly></textarea>
   <br>
@@ -761,6 +762,28 @@ async function writeTestButtonZPL() {
     '^FO300,265^FD11/11/2024^FS\n' +
     '^FO300,305^FD12345678^FS\n' +
     '\n' +
+    '^XZ';
+
+  log('Writing test...')
+  try {
+    let writeOutput = await channel.writeValueWithoutResponse(new TextEncoder("utf-8").encode(DATA));
+    log('OK...');
+    log(writeOutput);
+  } catch(error) {
+    log('Argh! ' + error);
+  }
+}
+
+async function writeTestButtonZPL2() {
+  if (!device || !channel) {
+    log('Device or GATT Channel not connected');
+    return;
+  }
+  var DATA = '^XA\n' +
+    '^CF0,30,30^FO25, 50\n' +
+    '^FB250,4,,\n' +
+    '^FDFD command that IS\n' +
+    'preceded by an FB command.^FS\n' +
     '^XZ';
 
   log('Writing test...')
