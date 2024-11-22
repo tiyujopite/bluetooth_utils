@@ -780,6 +780,9 @@ async function writeTestButtonZPL2() {
     return;
   }
   var DATA = '^XA\n' +
+    '^MNA\n' +
+    '^PW575\n' +
+    '^LL400\n' +
     '^CF0,30,30^FO25, 50\n' +
     '^FB250,4,,\n' +
     '^FDFD command that IS\n' +
